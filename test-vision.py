@@ -1,9 +1,10 @@
+from transformers.pipelines.object_detection import ObjectDetectionPipeline
 import requests
 from PIL import Image, ImageDraw
 from transformers import pipeline
 
 # 1. Initialisation du pipeline (sur le GPU cuda:1 comme demandé)
-pipe = pipeline("object-detection", model="hustvl/yolos-base", device_map="cuda:1")
+pipe: ObjectDetectionPipeline = pipeline("object-detection", model="hustvl/yolos-base", device_map="cuda:1")
 
 # 2. Téléchargement de l'image PIL directement depuis l'URL
 url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
