@@ -5,7 +5,9 @@ def qwen_predict(image,pipe):
             "role": "user",
             "content": [
                 {"type": "image", "image": image},
-                {"type": "text", "text": "Is the person's posture ergonomic ? you need to watch closly the hands on the keybord and the back if it's not strait it's a bad posture and if the person is leaning forward is alsow a bad posture, answer in a single sentence that MUST ends with yes or no in 40 words"}
+                {"type": "text", "text": """Act as an ergonomic posture coach. Closely analyze the user's posture in the image, paying specific attention to whether their hands are flat on the keyboard, if their back is slouching/not straight, or if they are leaning forward.
+
+First, provide a quick evaluation score from 1 to 10 based on how ergonomic their setup is. Then, deliver your final assessment in in a single, friendly sentence starting with 'hey mister...' and ending strictly with a definitive 'Yes' (for good posture) or 'No' (for bad posture)and you MUST end your answer by yes or no if it's a bad position ."""}
             ]
         },
     ]

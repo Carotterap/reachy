@@ -34,10 +34,9 @@ with ReachyMini(media_backend="default") as mini:
         if has_human: 
             print ("human found analysing the posture")
             good_posture= qwen_predict(image=image,pipe=qwen_pipeline)
-
-            if good_posture.lower().endswith("yes") :
-                print ("good posture")
-                sleep(75)
+            print (good_posture)
+            if good_posture.lower().strip().endswith("yes") :
+                sleep(30)
                 continue
             else :
                 result = pipe (good_posture,
@@ -46,9 +45,9 @@ with ReachyMini(media_backend="default") as mini:
             print(f"Saved: {OUT_PATH}")
             print ("audio ready")
             mini.media.play_sound("tts_output.wav")
-            sleep(75)
+            sleep(30)
         else :
             print("no humans found sleeeeeep")
-            sleep(75)
+            sleep(30)
       
         
