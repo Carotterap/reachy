@@ -1,23 +1,37 @@
+from reachy_mini.daemon.app.routers.state import get_antenna_joint_positions
+from shutil import move
+
+from reachy_mini import ReachyMini
+import transformers
+from time import sleep
+import numpy
+import PIL
+from PIL import Image, ImageDraw
 from transformers.pipelines.object_detection import ObjectDetectionPipeline
 import requests
 from PIL import Image, ImageDraw
 from transformers import pipeline
-
-# 1. Initialisation du pipeline (sur le GPU cuda:1 comme demandé)
 pipe: ObjectDetectionPipeline = pipeline("object-detection", model="hustvl/yolos-base", device_map="cuda:1")
+from quen import qwen_predict
 
-# 2. Téléchargement de l'image PIL directement depuis l'URL
-url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
-image = Image.open(requests.get(url, stream=True).raw)
+with ReachyMini(media_backend="default") as mini:
+
+ while True:
+  frame = mini.media.get_frame()
+  if frame is None : continue
+  rgb_frame = frame[:, :, ::-1]
+  image= PIL.Image.fromarray(rgb_frame)
+  print("picture")
+  
 
 # 3. Exécution de la prédiction (on passe l'objet image directement)
-predictions = pipe(image)
+  predictions = pipe(image)
 
 # 4. Préparation du dessin sur l'image
-draw = ImageDraw.Draw(image)
+  draw = ImageDraw.Draw(image)
 
 # 5. Boucle pour tracer chaque boîte englobante
-for pred in predictions:
+  for pred in predictions:
     box = pred["box"]
     label = pred["label"]
     score = pred["score"]
@@ -31,8 +45,9 @@ for pred in predictions:
     # Ajouter le texte du label et du score juste au-dessus du rectangle
     text = f"{label} ({score:.2f})"
     draw.text((xmin, max(0, ymin - 12)), text, fill="red")
-image.save("resultat_detection.jpg")
+  image.save("resultat_detection.jpg")
 # 6. Afficher l'image finale
-image.show()
-
-# (Optionnel) Sauvegarder l'image sur le disque :
+  image.show()
+  sleep(75)
+  if (label):= ("person") :
+    print ("alarm")
